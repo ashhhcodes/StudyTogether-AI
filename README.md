@@ -83,7 +83,7 @@ StudyTogether-AI combines focus management, real-time collaboration, analytics, 
 
 ## Deployment
 
-* Vercel (recommended)
+* Vercel 
 
 ---
 
