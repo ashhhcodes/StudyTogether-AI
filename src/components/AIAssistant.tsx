@@ -1,187 +1,214 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Send, Sparkles } from 'lucide-react';
+import { Send, X, Sparkles, Bot, CornerDownLeft, AlertCircle } from 'lucide-react';
+import { askGemini } from "@/lib/gemini";
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-}
+interface Message { sender: 'user' | 'ai'; text: string; time: string; }
+interface AIAssistantProps { onClose: () => void; }
 
-interface AIAssistantProps {
-  onClose: () => void;
-}
+const chips = [
+  'How should I structure a 2-hour study block?',
+  'Give me a quick 5-min relaxation exercise.',
+  'Explain the Pomodoro technique advantages.',
+  'Suggest ambient music choices.',
+];
+
+
 
 export function AIAssistant({ onClose }: AIAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([
+    { sender: 'ai', text: 'Hello! I am your AI Study Companion. How can I help you optimise your study session today?', time: '11:00 AM' },
+  ]);
+  const [input,    setInput]    = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const endRef = useRef<HTMLDivElement | null>(null);
+
+
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, isTyping]);
+
+
+
+const send = async (text?: string) => {
+  const userPrompt = text ?? input;
+
+  if (!userPrompt.trim()) return;
+
+  setMessages((prev) => [
+    ...prev,
     {
-      id: '1',
-      role: 'assistant',
-      content: 'Hi! I&apos;m your AI study assistant. I can help you with quick questions, explain concepts, or provide study tips. How can I help you today?',
-      timestamp: new Date(),
+      sender: "user",
+      text: userPrompt,
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     },
   ]);
-  const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  setInput("");
+  setIsTyping(true);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  try {
+    const aiReply = await askGemini(userPrompt);
 
-  const handleSend = async () => {
-    if (!inputValue.trim()) return;
+    setMessages((prev) => [
+      ...prev,
+      {
+        sender: "ai",
+        text: aiReply,
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
+  } catch (err) {
+    console.error(err);
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: inputValue,
-      timestamp: new Date(),
-    };
+    setMessages((prev) => [
+      ...prev,
+      {
+        sender: "ai",
+        text: "AI failed to respond.",
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
+  } finally {
+    setIsTyping(false);
+  }
+};
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
-    setIsTyping(true);
 
-    // Simulate AI response (in production, this would call an actual AI API)
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: generateMockResponse(inputValue),
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, aiResponse]);
-      setIsTyping(false);
-    }, 1500);
-  };
 
-  const generateMockResponse = (question: string): string => {
-    const lowerQuestion = question.toLowerCase();
-    
-    if (lowerQuestion.includes('calculus') || lowerQuestion.includes('derivative')) {
-      return 'Great question about calculus! A derivative represents the rate of change of a function. Think of it as measuring how quickly something is changing at any given point. For example, if you have a position function, its derivative gives you velocity. Would you like me to explain a specific concept or help with a problem?';
-    } else if (lowerQuestion.includes('physics') || lowerQuestion.includes('quantum')) {
-      return 'Physics can be challenging but fascinating! Quantum mechanics deals with the behavior of matter and energy at the atomic and subatomic level. The key principle is that particles can exist in multiple states simultaneously until observed. What specific topic would you like to explore?';
-    } else if (lowerQuestion.includes('study') || lowerQuestion.includes('tips') || lowerQuestion.includes('focus')) {
-      return 'Here are some effective study tips:\n\n1. Use the Pomodoro Technique (25 min focus + 5 min break)\n2. Study in a distraction-free environment\n3. Take regular breaks to prevent burnout\n4. Use active recall instead of passive reading\n5. Teach concepts to others to reinforce learning\n\nWould you like more specific advice for your situation?';
-    } else if (lowerQuestion.includes('motivation') || lowerQuestion.includes('tired')) {
-      return 'It&apos;s completely normal to feel tired sometimes! Remember why you started and celebrate small wins. Try taking a short walk, having a healthy snack, or switching subjects to refresh your mind. You&apos;ve got this! 💪';
-    } else {
-      return 'That&apos;s an interesting question! While I can provide general guidance, for detailed help with specific problems, I recommend:\n\n1. Breaking down the problem into smaller parts\n2. Reviewing relevant examples from your textbook\n3. Discussing with your study group\n4. Using the Pomodoro timer to stay focused\n\nIs there a specific aspect you&apos;d like me to help clarify?';
-    }
-  };
 
-  const quickQuestions = [
-    'How do I stay focused while studying?',
-    'Explain derivatives in calculus',
-    'Tips for better time management',
-    'How to use the Pomodoro technique?',
-  ];
 
   return (
-    <div className="fixed inset-y-0 right-0 w-96 bg-white border-l border-gray-200 shadow-2xl flex flex-col z-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6" />
-          <div>
-            <h2 className="text-lg">AI Study Assistant</h2>
-            <p className="text-xs text-white/80">Always here to help</p>
-          </div>
-        </div>
-        <button
-          onClick={onClose}
-          className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 1 && (
-          <div className="mb-4">
-            <p className="text-sm text-gray-600 mb-2">Quick questions:</p>
-            <div className="space-y-2">
-              {quickQuestions.map((question, index) => (
-                <button
-                  key={index}
-                  onClick={() => setInputValue(question)}
-                  className="w-full text-left px-3 py-2 text-sm bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg transition-colors"
+    
+    <div className="fixed inset-0 z-50 flex justify-end" style={{ background:'rgba(0,0,0,0.45)', backdropFilter:'blur(4px)' }}>
+      <div className="absolute inset-0" onClick={onClose} />
+
+
+
+
+      {/* Drawer */}
+      <div
+        className="w-full max-w-md h-screen flex flex-col relative z-10 animate-fade-in-left"
+        style={{
+          background: 'rgba(4,4,12,0.92)',
+          backdropFilter: 'blur(24px)',
+          borderLeft: '1px solid rgba(192,192,220,0.12)',
+          boxShadow: '-8px 0 40px rgba(0,0,0,0.70)',
+        }}
+      >
+        {/* Header */}
+        <div className="p-4 flex items-center justify-between" style={{ borderBottom:'1px solid rgba(192,192,220,0.07)', background:'rgba(6,6,16,0.50)' }}>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl relative" style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(192,192,220,0.10)' }}>
+              <Bot className="w-5 h-5" style={{ color:'#8080a8' }} />
+              <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full" style={{ background:'#608060', border:'2px solid #04040c' }} />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h3 style={{ fontSize:'0.88rem' }}>Study Companion</h3>
+                <Sparkles className="w-3.5 h-3.5 animate-pulse" style={{ color:'#7070a0' }} />
+              </div>
+              <span style={{ fontSize:'0.6rem', color:'#38384a', fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase' }}>AI Assistant</span>
+            </div>
+          </div>
+<button
+  onClick={onClose}
+  className="text-gray-400 hover:text-white"
+>
+  ✕
+</button>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 p-4 overflow-y-auto space-y-4">
+          {messages.map((msg, i) => {
+            const isAI = msg.sender === 'ai';
+            return (
+              <div key={i} className={`flex flex-col ${isAI ? 'items-start' : 'items-end'}`}>
+                <div
+                  className="max-w-[85%] px-3 py-2.5 rounded-2xl text-xs leading-relaxed"
+                  style={isAI
+                    ? { background:'rgba(255,255,255,0.04)', border:'1px solid rgba(192,192,220,0.09)', color:'#9090b0', borderTopLeftRadius:'4px' }
+                    : { background:'linear-gradient(135deg,#1c1c2e 0%,#282840 100%)', border:'1px solid rgba(192,192,220,0.16)', color:'#d0d0f0', borderTopRightRadius:'4px' }}
                 >
-                  {question}
+                  {msg.text.split('\n').map((line, li) => (
+                    <p key={li} style={{ marginTop: li > 0 ? '6px' : 0 }}>{line}</p>
+                  ))}
+                </div>
+                <span style={{ fontSize:'0.6rem', color:'#2a2a3a', marginTop:'4px', padding:'0 4px' }}>{msg.time}</span>
+              </div>
+            );
+          })}
+
+          {/* Typing indicator */}
+          {isTyping && (
+            <div className="flex flex-col items-start">
+              <div className="px-3 py-2.5 rounded-2xl flex items-center gap-1.5"
+                style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(192,192,220,0.09)' }}>
+                {[0, 150, 300].map(d => (
+                  <span key={d} className="w-1.5 h-1.5 rounded-full animate-bounce"
+                    style={{ background:'rgba(160,160,200,0.60)', animationDelay:`${d}ms` }} />
+                ))}
+              </div>
+            </div>
+          )}
+          <div ref={endRef} />
+        </div>
+
+        {/* Suggestion chips — only on first message */}
+        {messages.length === 1 && (
+          <div className="px-4 pb-4">
+            <p style={{ fontSize:'0.6rem', color:'#30304a', fontWeight:700, letterSpacing:'0.10em', textTransform:'uppercase', marginBottom:'8px' }}>
+              Suggested Prompts
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {chips.map(c => (
+                <button key={c} onClick={() => send(c)}
+                  className="px-3 py-1.5 text-left rounded-lg transition-all"
+                  style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(192,192,220,0.09)', color:'#505068', fontSize:'0.68rem' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color='#b0b0d0'; (e.currentTarget as HTMLButtonElement).style.borderColor='rgba(192,192,220,0.22)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color='#505068'; (e.currentTarget as HTMLButtonElement).style.borderColor='rgba(192,192,220,0.09)'; }}
+                >
+                  {c}
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                message.role === 'user'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-900'
-              }`}
-            >
-              <p className="text-sm whitespace-pre-line">{message.content}</p>
-              <p
-                className={`text-xs mt-1 ${
-                  message.role === 'user' ? 'text-white/70' : 'text-gray-500'
-                }`}
-              >
-                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </p>
-            </div>
+        {/* Input */}
+        <div className="p-4" style={{ borderTop:'1px solid rgba(192,192,220,0.07)', background:'rgba(6,6,16,0.50)' }}>
+          <div className="flex gap-2 relative items-center">
+            <input
+              type="text" placeholder="Ask anything about focus, schedules..."
+              value={input} onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && send()}
+              className="w-full pl-3 pr-10 py-3 rounded-xl outline-none"
+              style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(192,192,220,0.10)', color:'#c0c0d8', fontSize:'0.78rem' }}
+            />
+            <button onClick={() => send()} disabled={!input.trim()}
+              className="absolute right-1.5 p-2 rounded-lg transition-all"
+              style={{ background: input.trim() ? 'rgba(160,160,200,0.16)' : 'rgba(255,255,255,0.03)', color: input.trim() ? '#a0a0c8' : '#303044' }}>
+              <Send className="w-3.5 h-3.5" />
+            </button>
           </div>
-        ))}
-
-        {isTyping && (
-          <div className="flex justify-start">
-            <div className="bg-gray-100 rounded-2xl px-4 py-3">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-              </div>
-            </div>
+          <div className="flex items-center justify-between mt-2" style={{ fontSize:'0.62rem', color:'#282838' }}>
+            <span className="flex items-center gap-1">
+              <AlertCircle className="w-3 h-3" style={{ color:'#404058' }} />
+              Response generated locally
+            </span>
+            <span className="flex items-center gap-0.5">
+              Press Enter <CornerDownLeft className="w-2.5 h-2.5" />
+            </span>
           </div>
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input */}
-      <div className="border-t border-gray-200 p-4">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask me anything..."
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          <button
-            onClick={handleSend}
-            disabled={!inputValue.trim()}
-            className="p-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Send className="w-5 h-5" />
-          </button>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          AI responses are for general guidance only
-        </p>
       </div>
     </div>
   );

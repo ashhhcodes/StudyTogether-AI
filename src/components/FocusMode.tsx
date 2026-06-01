@@ -1,81 +1,91 @@
 import { useState, useEffect } from 'react';
-import { Eye, AlertTriangle } from 'lucide-react';
+import { Eye, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 export function FocusMode() {
-  const [focusScore, setFocusScore] = useState(100);
-  const [isDistracted, setIsDistracted] = useState(false);
-  const [distractionCount, setDistractionCount] = useState(0);
+  const [focusScore,      setFocusScore]      = useState(100);
+  const [isDistracted,    setIsDistracted]    = useState(false);
+  const [distractionCount,setDistractionCount]= useState(0);
 
   useEffect(() => {
-    // Simulate focus tracking (in production, this would use OpenCV/ML)
-    const interval = setInterval(() => {
-      const random = Math.random();
-      
-      // 20% chance of detecting "distraction"
-      if (random < 0.2) {
+    const id = setInterval(() => {
+      if (Math.random() < 0.2) {
         setIsDistracted(true);
-        setFocusScore((prev) => Math.max(0, prev - 5));
-        setDistractionCount((prev) => prev + 1);
-        
-        // Play beep sound (mock)
-        playBeep();
-        
-        // Reset after 2 seconds
+        setFocusScore(p => Math.max(0, p - 5));
+        setDistractionCount(p => p + 1);
         setTimeout(() => setIsDistracted(false), 2000);
-      } else if (focusScore < 100) {
-        // Gradually recover focus score
-        setFocusScore((prev) => Math.min(100, prev + 1));
+      } else {
+        setFocusScore(p => Math.min(100, p + 1));
       }
     }, 3000);
+    return () => clearInterval(id);
+  }, []);
 
-    return () => clearInterval(interval);
-  }, [focusScore]);
-
-  const playBeep = () => {
-    // In production, this would play an actual beep sound
-    console.log('🔔 Beep! Stay focused!');
-  };
+  const barColor = focusScore >= 80 ? '#80b890' : focusScore >= 50 ? '#b0a060' : '#b06060';
 
   return (
     <div className="absolute top-20 right-4 z-20">
-      <div className="bg-black/80 backdrop-blur rounded-lg p-4 w-64">
-        <div className="flex items-center gap-2 mb-3">
-          <Eye className="w-5 h-5 text-purple-400" />
-          <p className="text-white">Super Focus Mode</p>
+      <div
+        className="w-64 p-5"
+        style={{
+          background: 'rgba(4,4,14,0.90)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(192,192,220,0.16)',
+          borderLeft: '2px solid rgba(160,160,210,0.40)',
+          borderRadius: '1rem',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.70)',
+        }}
+      >
+        <div className="flex items-center gap-2 mb-4">
+          <Eye className="w-5 h-5 animate-pulse" style={{ color: '#7080a8' }} />
+          <p style={{ fontSize: '0.88rem', fontWeight: 600, color: '#c8c8e0' }}>Super Focus HUD</p>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
+          {/* Score bar */}
           <div>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-300">Focus Score</span>
-              <span className={`${focusScore >= 80 ? 'text-green-400' : focusScore >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
+            <div className="flex justify-between mb-1.5" style={{ fontSize: '0.72rem' }}>
+              <span style={{ color: '#50506a' }}>Attention Rating</span>
+              <span style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', color: barColor }}>
                 {focusScore}%
               </span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2">
+            <div className="w-full rounded-full h-1.5" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(192,192,220,0.06)' }}>
               <div
-                className={`h-2 rounded-full transition-all ${
-                  focusScore >= 80 ? 'bg-green-500' : focusScore >= 50 ? 'bg-yellow-500' : 'bg-red-500'
-                }`}
-                style={{ width: `${focusScore}%` }}
+                className="h-1.5 rounded-full transition-all duration-500"
+                style={{ width: `${focusScore}%`, background: barColor, boxShadow: `0 0 8px ${barColor}80` }}
               />
             </div>
           </div>
 
-          <div className="text-sm">
-            <span className="text-gray-300">Distractions: </span>
-            <span className="text-white">{distractionCount}</span>
+          {/* Distraction count */}
+          <div className="flex justify-between items-center" style={{ fontSize: '0.72rem' }}>
+            <span style={{ color: '#50506a' }}>Distractions</span>
+            <span
+              style={{
+                color: '#c0c0d8', fontWeight: 700, fontFamily: 'var(--font-mono)',
+                background: 'rgba(255,255,255,0.05)', padding: '1px 10px', borderRadius: '6px',
+                border: '1px solid rgba(192,192,220,0.10)',
+              }}
+            >
+              {distractionCount}
+            </span>
           </div>
 
+          {/* Alert */}
           {isDistracted && (
-            <div className="bg-red-500/20 border border-red-500 rounded p-2 flex items-center gap-2 animate-pulse">
-              <AlertTriangle className="w-4 h-4 text-red-400" />
-              <p className="text-red-300 text-sm">Stay focused!</p>
+            <div
+              className="flex items-center gap-2 p-2.5 rounded-xl animate-pulse"
+              style={{ background: 'rgba(140,40,40,0.20)', border: '1px solid rgba(180,60,60,0.25)' }}
+            >
+              <AlertTriangle className="w-4 h-4 flex-shrink-0" style={{ color: '#b07070' }} />
+              <p style={{ fontSize: '0.72rem', color: '#d0a0a0', fontWeight: 500 }}>Distraction detected!</p>
             </div>
           )}
 
-          <div className="text-xs text-gray-400 pt-2 border-t border-gray-700">
-            AI is monitoring your attention through camera feed
+          {/* Footer */}
+          <div className="flex items-center gap-1.5 pt-2" style={{ borderTop: '1px solid rgba(192,192,220,0.07)', fontSize: '0.62rem', color: '#30304a' }}>
+            <ShieldCheck className="w-3.5 h-3.5" style={{ color: '#505070' }} />
+            <span>AI Attention Filter active</span>
           </div>
         </div>
       </div>

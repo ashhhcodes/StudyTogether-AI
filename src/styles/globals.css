@@ -1,84 +1,61 @@
-@custom-variant dark (&:is(.dark *));
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 :root {
-  --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --font-size: 16px;
+  --background: #04040a;
+  --foreground: #f0f0f8;
+  --card: rgba(8, 8, 18, 0.50);
+  --card-foreground: #f0f0f8;
+  --popover: #080814;
+  --popover-foreground: #f0f0f8;
+  --primary: #c8c8d8;
+  --primary-foreground: #04040a;
+  --secondary: rgba(255, 255, 255, 0.06);
+  --secondary-foreground: #e0e0ec;
+  --muted: rgba(255, 255, 255, 0.04);
+  --muted-foreground: #8888a0;
+  --accent: rgba(200, 200, 220, 0.10);
+  --accent-foreground: #d8d8ec;
+  --destructive: #cc4444;
+  --destructive-foreground: #ffffff;
+  --border: rgba(192, 192, 210, 0.12);
+  --input: rgba(255, 255, 255, 0.04);
+  --input-background: rgba(10, 10, 20, 0.6);
+  --switch-background: rgba(255, 255, 255, 0.15);
+  --ring: #a0a0c0;
+  --radius: 1rem;
+
+  --sidebar: rgba(4, 4, 10, 0.80);
+  --sidebar-foreground: #f0f0f8;
+  --sidebar-primary: #c0c0d8;
+  --sidebar-primary-foreground: #04040a;
+  --sidebar-accent: rgba(255, 255, 255, 0.04);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(192, 192, 210, 0.08);
+  --sidebar-ring: #a0a0c0;
+
+  /* Silver / Platinum glow accents */
+  --glow-silver: rgba(192, 192, 220, 0.35);
+  --glow-platinum: rgba(220, 220, 240, 0.25);
+  --glow-white: rgba(255, 255, 255, 0.20);
+  /* Cool-neutral star glint (no blue cast) */
+  --glow-star: rgba(255, 255, 255, 0.18);
+
+  /* Named palette shortcuts */
+  --silver: #c0c0d8;
+  --platinum: #e0e0f0;
+  --star-white: #f8f8ff;
+  --dim-silver: #888898;
 }
 
 @theme inline {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -100,11 +77,6 @@
   --color-input-background: var(--input-background);
   --color-switch-background: var(--switch-background);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -121,71 +93,262 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border/80 outline-ring/50;
   }
 
   body {
-    @apply bg-background text-foreground;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply bg-[#04040a] text-[#f0f0f8] font-sans antialiased overflow-x-hidden;
+    font-family: var(--font-sans);
+    /* Galaxy black background with scattered white star dots */
+    background-color: #04040a;
+    background-image:
+      radial-gradient(circle at 18% 22%, rgba(12, 12, 16, 0.85) 0%, transparent 42%),
+      radial-gradient(circle at 82% 78%, rgba(8, 8, 10, 0.75) 0%, transparent 48%),
+      /* Stars — extra sprinkle layer */
+      radial-gradient(1px 1px at 8% 18%,   rgba(255,255,255,0.45) 50%, transparent),
+      radial-gradient(1px 1px at 33% 62%, rgba(255,255,255,0.35) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 58% 28%, rgba(255,255,255,0.5) 50%, transparent),
+      radial-gradient(1px 1px at 72% 88%,  rgba(255,255,255,0.4) 50%, transparent),
+      radial-gradient(1px 1px at 96% 42%,  rgba(255,255,255,0.55) 50%, transparent),
+      /* Stars layer — sizes and positions varied */
+      radial-gradient(1px 1px at 12% 8%,  rgba(255,255,255,0.9) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 28% 15%, rgba(255,255,255,0.7) 50%, transparent),
+      radial-gradient(1px 1px at 45% 5%,  rgba(255,255,255,0.6) 50%, transparent),
+      radial-gradient(2px 2px at 62% 12%, rgba(255,255,255,0.5) 50%, transparent),
+      radial-gradient(1px 1px at 78% 7%,  rgba(255,255,255,0.8) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 90% 20%, rgba(255,255,255,0.6) 50%, transparent),
+      radial-gradient(1px 1px at 5% 35%,  rgba(255,255,255,0.7) 50%, transparent),
+      radial-gradient(2px 2px at 22% 42%, rgba(255,255,255,0.4) 50%, transparent),
+      radial-gradient(1px 1px at 38% 55%, rgba(255,255,255,0.6) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 55% 48%, rgba(255,255,255,0.5) 50%, transparent),
+      radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,0.7) 50%, transparent),
+      radial-gradient(2px 2px at 85% 38%, rgba(255,255,255,0.4) 50%, transparent),
+      radial-gradient(1px 1px at 95% 55%, rgba(255,255,255,0.6) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 10% 68%, rgba(255,255,255,0.5) 50%, transparent),
+      radial-gradient(1px 1px at 32% 72%, rgba(255,255,255,0.7) 50%, transparent),
+      radial-gradient(2px 2px at 50% 80%, rgba(255,255,255,0.4) 50%, transparent),
+      radial-gradient(1px 1px at 68% 75%, rgba(255,255,255,0.6) 50%, transparent),
+      radial-gradient(1.5px 1.5px at 80% 85%, rgba(255,255,255,0.5) 50%, transparent),
+      radial-gradient(1px 1px at 92% 90%, rgba(255,255,255,0.8) 50%, transparent),
+      radial-gradient(1px 1px at 18% 90%, rgba(255,255,255,0.5) 50%, transparent),
+      radial-gradient(2px 2px at 42% 95%, rgba(255,255,255,0.4) 50%, transparent),
+      radial-gradient(1px 1px at 75% 93%, rgba(255,255,255,0.6) 50%, transparent);
+    background-attachment: fixed;
+    background-size: 100% 100%;
   }
 }
 
-/**
- * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
- */
-@layer base {
-  :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
-    h1 {
-      font-size: var(--text-2xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
+/* ============================================================
+   GLASSMORPHISM PANELS — galaxy black base, silver borders
+   ============================================================ */
+.glass-panel {
+  background: rgba(8, 8, 18, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(192, 192, 220, 0.14);
+  border-radius: 1rem;
+  box-shadow:
+    0 8px 32px 0 rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
 
-    h2 {
-      font-size: var(--text-xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
+.glass-panel-hover {
+  transition: all 0.3s ease;
+}
 
-    h3 {
-      font-size: var(--text-lg);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
+.glass-panel-hover:hover {
+  background: rgba(12, 12, 24, 0.65);
+  border-color: rgba(200, 200, 230, 0.22);
+  box-shadow:
+    0 8px 40px 0 rgba(0, 0, 0, 0.6),
+    0 0 20px -8px rgba(200, 200, 230, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
 
-    h4 {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
+/* ============================================================
+   SILVER / PLATINUM GLOW UTILITIES
+   ============================================================ */
+.star-glow-silver {
+  box-shadow:
+    0 0 30px -8px var(--glow-silver),
+    0 0 60px -20px var(--glow-platinum);
+}
 
-    p {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
+.star-glow-white {
+  box-shadow: 0 0 35px -10px var(--glow-white);
+}
 
-    label {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
+.star-glow-blue {
+  box-shadow: 0 0 35px -10px var(--glow-star);
+}
 
-    button {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
+/* Legacy aliases — all map to silver / neutral galaxy glow */
+.star-glow-purple  { box-shadow: 0 0 30px -8px var(--glow-silver); }
+.star-glow-pink    { box-shadow: 0 0 30px -8px var(--glow-silver); }
+.star-glow-emerald { box-shadow: 0 0 30px -8px rgba(160,200,180,0.2); }
 
-    input {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
+/* ============================================================
+   MICRO-ANIMATIONS
+   ============================================================ */
+@keyframes pulse-glow-silver {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+    box-shadow: 0 0 20px 0 var(--glow-silver);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+    box-shadow: 0 0 38px 4px var(--glow-silver);
   }
 }
 
-html {
-  font-size: var(--font-size);
+.animate-pulse-glow {
+  animation: pulse-glow-silver 3.5s infinite ease-in-out;
+}
+
+/* Audio waveform bars */
+@keyframes wave-grow {
+  0%, 100% { transform: scaleY(0.3); }
+  50%       { transform: scaleY(1); }
+}
+
+.lofi-bar {
+  animation: wave-grow 1.2s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+/* Fade-in from right for AI drawer */
+@keyframes fade-in-left {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-in-left {
+  animation: fade-in-left 0.25s ease-out forwards;
+}
+
+/* ============================================================
+   CUSTOM SCROLLBARS — platinum tinted
+   ============================================================ */
+::-webkit-scrollbar       { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: rgba(4, 4, 10, 0.8); }
+::-webkit-scrollbar-thumb {
+  background: rgba(192, 192, 220, 0.15);
+  border-radius: 9999px;
+  border: 2px solid rgba(4, 4, 10, 0.8);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(220, 220, 245, 0.30); }
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1 {
+  font-size: 1.875rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #e4e4ee 45%, #9a9aa8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #e8e8f8;
+}
+
+h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #d8d8ec;
+}
+
+p {
+  color: #8888a0;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   REUSABLE COMPONENT CLASSES
+   ============================================================ */
+
+/* Input fields */
+.glass-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(192, 192, 220, 0.14);
+  border-radius: 0.75rem;
+  color: #f0f0f8;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+.glass-input::placeholder { color: #55556a; }
+.glass-input:focus {
+  border-color: rgba(200, 200, 230, 0.35);
+  box-shadow: 0 0 0 2px rgba(192, 192, 220, 0.10);
+}
+
+/* Primary button — silver gradient */
+.btn-primary {
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, #c0c0d8 0%, #e8e8f8 50%, #a8a8c0 100%);
+  color: #04040a;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 20px rgba(192, 192, 220, 0.20);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:hover {
+  box-shadow: 0 4px 28px rgba(220, 220, 245, 0.35);
+  transform: translateY(-1px);
+}
+.btn-primary:active { transform: scale(0.98); }
+
+/* Secondary button */
+.btn-secondary {
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d0d0e8;
+  border: 1px solid rgba(192, 192, 220, 0.18);
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(220, 220, 245, 0.28);
+}
+
+/* Silver accent badge / pill */
+.silver-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  background: rgba(192, 192, 220, 0.08);
+  border: 1px solid rgba(192, 192, 220, 0.20);
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b0b0c8;
+}
+
+/* Active indicator dot — silver shimmer */
+.active-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #e8e8ff 0%, #a0a0c0 100%);
+  box-shadow: 0 0 8px rgba(200, 200, 240, 0.8);
 }
